@@ -1,0 +1,48 @@
+const API_URL = "http://localhost:4000/api";
+
+export function getAuthHeaders(token) {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
+
+export async function apiGet(path, token) {
+  const res = await fetch(`${API_URL}${path}`, {
+    headers: getAuthHeaders(token),
+  });
+  if (!res.ok) throw new Error("Request failed");
+  return res.json();
+}
+
+export async function apiPost(path, body, token) {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error("Request failed");
+  return res.json();
+}
+
+export async function apiPut(path, body, token) {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "PUT",
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error("Request failed");
+  return res.json();
+}
+
+export async function apiDelete(path, token) {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(token),
+  });
+  if (!res.ok && res.status !== 204) throw new Error("Request failed");
+}
+
