@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-// POST /api/auth/signup
 router.post("/signup", async (req, res) => {
   const { email, password, organizationName } = req.body;
 
@@ -15,19 +14,10 @@ router.post("/signup", async (req, res) => {
   const prisma = req.prisma;
 
   try {
-    // check if email already exists (by email)
-    const existing = await prisma.user.findUnique({
-      where: { email },
-    });
+    // TEMP: no duplicate email check at all
 
-    if (existing) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-
-    // hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // create organization + user + settings
     const organization = await prisma.organization.create({
       data: {
         name: organizationName,
@@ -70,6 +60,7 @@ router.post("/signup", async (req, res) => {
 });
 
 export default router;
+
 
 
 
