@@ -14,22 +14,33 @@ export default function SignupPage() {
 
   // ✅ single handleSubmit in this component
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      const data = await apiPost("/auth/signup", { organizationName, email, password });
-      login(data);
-      navigate("/dashboard");
+  e.preventDefault();
+  setError("");
+  try {
+    const data = await apiPost("/auth/signup", { organizationName, email, password });
+    login(data);
+    navigate("/dashboard");
+  } catch (err) {
+    setError("Could not sign up");
+  }
+};
 
-    } catch (err) {
-      setError("Could not sign up");
-    }
-  };
 
   return (
     <div className="app-shell">
       <div className="card">
         <div className="card-header">
+          <form onSubmit={handleSubmit}>
+          {/* Organization Name input */}
+          {/* Email input */}
+          {/* Password input */}
+          {error && (
+            <p style={{ color: "#f97373", fontSize: 12 }}>{error}</p>
+          )}
+          <button type="submit" className="btn-primary">
+            Sign up
+          </button>
+        </form>
           <div className="badge-pill">StockFlow</div>
           <h2 className="card-title">Create your workspace</h2>
           <p className="card-subtitle">
