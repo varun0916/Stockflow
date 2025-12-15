@@ -14,32 +14,38 @@ router.post("/signup", async (req, res) => {
   const prisma = req.prisma;
 
   try {
-    // optional: explicit email check (safe even if table is empty)
+    // 1) optional: check if user email already exists
     const existing = await prisma.user.findUnique({ where: { email } });
+    console.log("SIGNUP existing user for", email, "=>", existing);
     if (existing) {
       return res.status(400).json({ message: "Email already in use" });
     }
 
+
+    // 2) hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // 1) create organization
+    // 3) create organization + user + settings (your block)
     const organization = await prisma.organization.create({
       data: {
         name: organizationName,
+        users: {
+          create: {
+            email,
+            passwordHash,
+          },
+        },
         settings: {
           create: {},
         },
       },
-    });
-
-    // 2) create user linked to organization
-    const user = await prisma.user.create({
-      data: {
-        email,
-        passwordHash,
-        organizationId: organization.id,   // assumes this FK field exists
+      include: {
+        users: true,
       },
     });
+
+    // 4) build response
+    const user = organization.users[0];
 
     const token = jwt.sign(
       { userId: user.id, orgId: organization.id },
@@ -61,6 +67,7 @@ router.post("/signup", async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 export default router;
 
