@@ -23,7 +23,7 @@ export default function SignupPage() {
         password,
       });
 
-      login(res.data); // or just navigate if backend auto‑logs in
+      login(res.data);
       navigate("/dashboard");
     } catch (err) {
       console.log("signup error", err.response?.status, err.response?.data);
@@ -78,4 +78,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
 
