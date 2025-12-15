@@ -9,21 +9,32 @@ export default function SignupPage() {
   const [organizationName, setOrganizationName] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login } = useAuth(); // if you want auto‑login after signup
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  try {
-    await apiPost("/auth/signup", { OrganizationName, email, password });
-    navigate("/login");           // redirect to login page after signup
-  } catch (err) {
-    console.error(err);
-    setError("Could not sign up");
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
+    try {
+      // ✅ send correct key & variable name
+      await apiPost("/auth/signup", {
+        organizationName,
+        email,
+        password,
+      });
 
+      // Option 1: go to login page after signup
+      navigate("/login");
+
+      // Option 2 (if backend returns token on signup and you want auto‑login):
+      // const res = await apiPost("/auth/signup", { organizationName, email, password });
+      // login(res.token, res.user);
+      // navigate("/");
+    } catch (err) {
+      console.error(err);
+      setError("Could not sign up");
+    }
+  };
 
   return (
     <div className="app-shell">
@@ -36,7 +47,6 @@ export default function SignupPage() {
           </p>
         </div>
 
-        {/* ✅ single form here */}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Organization Name</label>
@@ -44,6 +54,7 @@ export default function SignupPage() {
               className="form-input"
               value={organizationName}
               onChange={(e) => setOrganizationName(e.target.value)}
+              autoComplete="organization"
               required
             />
           </div>
@@ -55,6 +66,7 @@ export default function SignupPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
               required
             />
           </div>
@@ -66,6 +78,7 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
               required
             />
           </div>
@@ -86,7 +99,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-
-
-
