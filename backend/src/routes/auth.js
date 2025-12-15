@@ -14,29 +14,32 @@ router.post("/signup", async (req, res) => {
   const prisma = req.prisma;
 
   try {
-    // TEMP: no duplicate email check at all
+    // optional: explicit email check (safe even if table is empty)
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    // 1) create organization
     const organization = await prisma.organization.create({
       data: {
         name: organizationName,
-        users: {
-          create: {
-            email,
-            passwordHash,
-          },
-        },
         settings: {
           create: {},
         },
       },
-      include: {
-        users: true,
-      },
     });
 
-    const user = organization.users[0];
+    // 2) create user linked to organization
+    const user = await prisma.user.create({
+      data: {
+        email,
+        passwordHash,
+        organizationId: organization.id,   // assumes this FK field exists
+      },
+    });
 
     const token = jwt.sign(
       { userId: user.id, orgId: organization.id },
@@ -60,6 +63,7 @@ router.post("/signup", async (req, res) => {
 });
 
 export default router;
+
 
 
 
