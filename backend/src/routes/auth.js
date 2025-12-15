@@ -15,7 +15,7 @@ router.post("/signup", async (req, res) => {
   const prisma = req.prisma;
 
   try {
-    // check if email already exists
+    // check if email already exists (by email)
     const existing = await prisma.user.findUnique({
       where: { email },
     });
@@ -70,4 +70,6 @@ router.post("/signup", async (req, res) => {
 });
 
 export default router;
+
+
 
