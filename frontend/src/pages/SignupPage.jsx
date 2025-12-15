@@ -23,12 +23,11 @@ export default function SignupPage() {
         password,
       });
 
-      // if backend returns user + token, log in and go to dashboard
       login(res.data);
       navigate("/dashboard");
     } catch (err) {
-      console.log("signup error", err);
-      setError("Could not sign up");
+      const msg = err?.response?.data?.message || "Could not sign up";
+      setError(msg);
     }
   };
 
@@ -92,5 +91,6 @@ export default function SignupPage() {
     </div>
   );
 }
+
 
 
