@@ -15,7 +15,7 @@ export default function SignupPage() {
   e.preventDefault();
   setError("");
   try {
-    await apiPost("/auth/signup", { name, email, password });
+    await apiPost("/auth/signup", { OrganizationName, email, password });
     navigate("/login");           // redirect to login page after signup
   } catch (err) {
     console.error(err);
