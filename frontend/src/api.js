@@ -34,6 +34,7 @@ export async function apiPost(path, body, token) {
   return res.json();
 }
 
+
 export async function apiPut(path, body, token) {
   const res = await fetch(`${API_URL}${path}`, {
     method: "PUT",
