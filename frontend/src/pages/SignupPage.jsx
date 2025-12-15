@@ -11,21 +11,24 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    try {
-      const data = await apiPost("/auth/signup", {
-        organizationName,
-        email,
-        password,
-      });
-      login(data);
-      navigate("/dashboard");
-    } catch (err) {
-      setError("Could not sign up");
-    }
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  try {
+    const data = await apiPost("/auth/signup", {
+      organizationName,
+      email,
+      password,
+    });
+    console.log("signup response", data);
+    login(data);          // or login(data.token) after you see the shape
+    navigate("/dashboard");
+  } catch (err) {
+    console.error(err);
+    setError("Could not sign up");
+  }
+};
+
 
   return (
     <div className="app-shell">
