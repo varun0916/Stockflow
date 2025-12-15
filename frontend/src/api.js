@@ -1,6 +1,6 @@
 // api.js
 const API_URL =
-  import.meta.env.VITE_API_URL || "https://stockflow-1-ro65.onrender.com/api";
+  import.meta.env.VITE_API_URL || "https://stockflow-dx79.onrender.com/api";
 
 
 
