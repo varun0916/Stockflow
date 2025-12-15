@@ -1,4 +1,3 @@
-// SignupPage.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { apiPost } from "../api.js";
@@ -12,35 +11,26 @@ export default function SignupPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  // ✅ single handleSubmit in this component
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  try {
-    const data = await apiPost("/auth/signup", { organizationName, email, password });
-    login(data);
-    navigate("/dashboard");
-  } catch (err) {
-    setError("Could not sign up");
-  }
-};
-
+    e.preventDefault();
+    setError("");
+    try {
+      const data = await apiPost("/auth/signup", {
+        organizationName,
+        email,
+        password,
+      });
+      login(data);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Could not sign up");
+    }
+  };
 
   return (
     <div className="app-shell">
       <div className="card">
         <div className="card-header">
-          <form onSubmit={handleSubmit}>
-          {/* Organization Name input */}
-          {/* Email input */}
-          {/* Password input */}
-          {error && (
-            <p style={{ color: "#f97373", fontSize: 12 }}>{error}</p>
-          )}
-          <button type="submit" className="btn-primary">
-            Sign up
-          </button>
-        </form>
           <div className="badge-pill">StockFlow</div>
           <h2 className="card-title">Create your workspace</h2>
           <p className="card-subtitle">
@@ -48,6 +38,7 @@ export default function SignupPage() {
           </p>
         </div>
 
+        {/* ✅ single form here */}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Organization Name</label>
@@ -97,6 +88,7 @@ export default function SignupPage() {
     </div>
   );
 }
+
 
 
 
