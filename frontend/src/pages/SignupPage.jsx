@@ -17,11 +17,12 @@ export default function SignupPage() {
     setError("");
 
     try {
-      const res = await apiPost("/api/auth/signup", {
+      const res = await apiPost("/auth/signup", {
         organizationName,
         email,
         password,
       });
+
 
       login(res.data);
       navigate("/dashboard");

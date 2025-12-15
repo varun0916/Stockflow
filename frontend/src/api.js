@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:4000/api";
+const API_URL = "https://stockflow-dx79.onrender.com/api";
+
+
 
 export function getAuthHeaders(token) {
   return {
