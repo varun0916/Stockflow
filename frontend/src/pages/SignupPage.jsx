@@ -15,17 +15,13 @@ export default function SignupPage() {
     e.preventDefault();
     setError("");
     try {
-      const data = await apiPost("/auth/signup", {
-        email,
-        password,
-        organizationName,
-      });
-      login(data);
-      navigate("/");
-    } catch {
+      const res = await api.post("/api/auth/signup", data);
+      console.log("signup success", res.data);
+    } catch (err) {
+      console.log("signup error", err.response?.status, err.response?.data);
       setError("Could not sign up");
-    }
-  };
+  }
+
 
   return (
     <div className="app-shell">
