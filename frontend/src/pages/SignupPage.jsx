@@ -4,38 +4,33 @@ import { apiPost } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
 export default function SignupPage() {
+  const [organizationName, setOrganizationName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [organizationName, setOrganizationName] = useState("");
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const SignupPage = () => {
-    const handleSubmit = async (e) => {
-      e.preventDefault(); // stop default navigation
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
-      try {
-        await apiPost("/auth/signup", {
-          organizationName,
-          email,
-          password,
-        });
+    try {
+      const res = await apiPost("/auth/signup", {
+        organizationName,
+        email,
+        password,
+      });
 
-        // handle success: navigate to login/dashboard
-      } catch (err) {
-        // set error state: "Could not sign up"
-      }
-    };
-
-    return (
-      <form onSubmit={handleSubmit}>
-        {/* inputs for organizationName, email, password */}
-        <button type="submit">Sign up</button>
-      </form>
-    );
+      // if backend returns user + token, log in and go to dashboard
+      login(res.data);
+      navigate("/dashboard");
+    } catch (err) {
+      console.log("signup error", err);
+      setError("Could not sign up");
+    }
   };
-
 
   return (
     <div className="app-shell">
@@ -47,6 +42,7 @@ export default function SignupPage() {
             Track products and low stock alerts for your store.
           </p>
         </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="form-label">Organization Name</label>
@@ -54,16 +50,21 @@ export default function SignupPage() {
               className="form-input"
               value={organizationName}
               onChange={(e) => setOrganizationName(e.target.value)}
+              required
             />
           </div>
+
           <div className="form-group">
             <label className="form-label">Email</label>
             <input
               className="form-input"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
+
           <div className="form-group">
             <label className="form-label">Password</label>
             <input
@@ -71,13 +72,19 @@ export default function SignupPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
-          {error && <p style={{ color: "#f97373", fontSize: 12 }}>{error}</p>}
+
+          {error && (
+            <p style={{ color: "#f97373", fontSize: 12 }}>{error}</p>
+          )}
+
           <button type="submit" className="btn-primary">
             Sign up
           </button>
         </form>
+
         <div className="card-footer">
           Already have account? <Link to="/login">Login</Link>
         </div>
@@ -85,4 +92,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
 
