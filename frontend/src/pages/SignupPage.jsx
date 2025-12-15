@@ -15,19 +15,14 @@ export default function SignupPage() {
   e.preventDefault();
   setError("");
   try {
-        // in SignupPage.jsx handleSubmit
-    const data = await apiPost("/auth/signup", { organizationName, email, password });
-    // login(data);     // comment this out for now
-    navigate("/login"); // send user to login page instead
-
-    console.log("signup response", data);
-    login(data);          // or login(data.token) after you see the shape
-    navigate("/dashboard");
+    await apiPost("/auth/signup", { organizationName, email, password });
+    navigate("/login");           // redirect to login page after signup
   } catch (err) {
     console.error(err);
     setError("Could not sign up");
   }
 };
+
 
 
   return (
