@@ -1,33 +1,28 @@
+// SignupPage.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { apiPost } from "../api.js";
 import { useAuth } from "../AuthContext.jsx";
 
 export default function SignupPage() {
-  const [organizationName, setOrganizationName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  // ✅ single handleSubmit in this component
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
-      const res = await apiPost("/auth/signup", {
-        organizationName,
-        email,
-        password,
-      });
-
-      login(res.data);
+      const data = await apiPost("/auth/signup", { organizationName, email, password });
+      login(data);
       navigate("/dashboard");
+
     } catch (err) {
-      const msg = err?.response?.data?.message || "Could not sign up";
-      setError(msg);
+      setError("Could not sign up");
     }
   };
 
