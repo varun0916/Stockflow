@@ -30,9 +30,15 @@ export async function apiPost(path, body, token) {
     },
     body: JSON.stringify(body),
   });
+
   if (!res.ok) throw new Error("Request failed");
-  return res.json();
+
+  // Handle empty body (e.g. 200 with Content-Length: 0)
+  const text = await res.text();
+  if (!text) return null;              // or return {} if you prefer
+  return JSON.parse(text);
 }
+
 
 
 export async function apiPut(path, body, token) {
