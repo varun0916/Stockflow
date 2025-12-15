@@ -20,7 +20,8 @@ export default function SignupPage() {
     } catch (err) {
       console.log("signup error", err.response?.status, err.response?.data);
       setError("Could not sign up");
-  }
+  }  
+  }  
 
 
   return (
